@@ -3,10 +3,16 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .serializers import RegisterSerializer
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+
+# Registration view
 class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
+# Custom login view returning token
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
@@ -17,6 +23,6 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
-            'email': user.email
+            'username': user.username
         })
 
