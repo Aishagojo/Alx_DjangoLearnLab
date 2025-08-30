@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)  # Checker looks for this
+    password = serializers.CharField(write_only=True)  # <-- this line is key
 
     class Meta:
         model = get_user_model()
@@ -15,6 +15,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
-        Token.objects.create(user=user)  # Checker looks for this
+        Token.objects.create(user=user)
         return user
 
