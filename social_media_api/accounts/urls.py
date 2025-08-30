@@ -1,10 +1,9 @@
-# accounts/urls.py
 from django.urls import path
-from .views import RegisterView, CustomAuthToken, ProfileView
+from .views import RegisterView, CustomAuthToken  # ProfileView not yet implemented
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomAuthToken.as_view(), name='login'),
-    path('profile/', ProfileView.as_view(), name='profile'),
+    # path('profile/', ProfileView.as_view(), name='profile'),  # add later
 ]
 
