@@ -7,13 +7,15 @@ from .models import CustomUser
 def follow_user(request, user_id):
     user_to_follow = get_object_or_404(CustomUser, id=user_id)
     if user_to_follow != request.user:
-        request.user.following.add(user_to_follow)  # Assuming a ManyToMany 'following' field
-    return redirect('profile', user_id=user_id)  # Redirect to the user's profile or any page
+        # Add the user to the current user's following list
+        request.user.following.add(user_to_follow)
+    return redirect('profile', user_id=user_id)
 
 @login_required
 def unfollow_user(request, user_id):
     user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
     if user_to_unfollow != request.user:
+        # Remove the user from the current user's following list
         request.user.following.remove(user_to_unfollow)
     return redirect('profile', user_id=user_id)
 

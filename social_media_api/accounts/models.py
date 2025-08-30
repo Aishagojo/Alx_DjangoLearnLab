@@ -1,12 +1,16 @@
+# accounts/models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):
-    bio = models.TextField(blank=True, default="Hello!")
-    profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
-    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
-
-    def __str__(self):
-        return self.username
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
+    
+    # One self-referential ManyToMany for following
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='followers',  # This creates the reverse accessor
+        blank=True
+    )
 
