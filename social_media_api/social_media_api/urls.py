@@ -3,6 +3,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('accounts.urls')),
- path('api/posts/', include('posts.urls')), ]
+    
+    # Accounts app endpoints: register, login, profile, follow/unfollow
+    path('api/accounts/', include('accounts.urls')),
+    
+    # Posts app endpoints: posts CRUD and feed
+    path('api/posts/', include('posts.urls')),
+]
 
