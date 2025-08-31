@@ -9,13 +9,8 @@ class FeedView(generics.GenericAPIView):
         following_users = request.user.following.all()
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serialized_posts = [
-            {
-                "id": post.id,
-                "author": post.author.username,
-                "content": post.content,
-                "created_at": post.created_at
-            }
-            for post in posts
+            {"id": p.id, "author": p.author.username, "content": p.content, "created_at": p.created_at}
+            for p in posts
         ]
         return Response(serialized_posts)
 
