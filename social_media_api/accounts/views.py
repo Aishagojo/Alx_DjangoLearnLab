@@ -1,24 +1,26 @@
-# accounts/views.py
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from .models import CustomUser
 
-@login_required
-def follow_user(request, user_id):
-    user_to_follow = get_object_or_404(CustomUser, id=user_id)
-    if user_to_follow == request.user:
-        return JsonResponse({'status': 'error', 'message': 'Cannot follow yourself'}, status=400)
-    
-    request.user.following.add(user_to_follow)
-    return JsonResponse({'status': 'success', 'message': f'You are now following {user_to_follow.username}'})
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-@login_required
-def unfollow_user(request, user_id):
-    user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
-    if user_to_unfollow == request.user:
-        return JsonResponse({'status': 'error', 'message': 'Cannot unfollow yourself'}, status=400)
-    
-    request.user.following.remove(user_to_unfollow)
-    return JsonResponse({'status': 'success', 'message': f'You have unfollowed {user_to_unfollow.username}'})
+    def post(self, request, user_id):
+        user_to_follow = get_object_or_404(CustomUser, id=user_id)
+        if user_to_follow != request.user:
+            request.user.following.add(user_to_follow)
+            return Response({"message": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
+        return Response({"error": "Cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
+        if user_to_unfollow != request.user:
+            request.user.following.remove(user_to_unfollow)
+            return Response({"message": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
+        return Response({"error": "Cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
