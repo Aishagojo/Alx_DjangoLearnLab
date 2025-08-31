@@ -1,0 +1,14 @@
+L: Click here
+ID: e3828a5c33ead29797467d79319db773650471d9
+Author: Aishagojo
+Subject: plz work
+Date: 2025-08-30 16:05:12 -0700
+Checks for “Modify your custom user model to include a following field, which is a many-to-many relationship to itself, representing the users that a given user follows.” task
+
+Checks for “Develop views in the accounts app that allow users to follow and unfollow others. This might include actions like followuser and unfollowuser, which update the following relationship.” task
+
+Checks for “Create a view in the posts app that generates a feed based on the posts from users that the current user follows. This view should return posts ordered by creation date, showing the most recent posts at the top.” task
+
+Checks for “Set up URL patterns in accounts/urls.py for follow management (e.g., /follow/int:user_id/ and /unfollow/int:user_id/).” task
+
+Checks for “Add a route in posts/urls.py for the feed endpoint, such as /feed/.” task

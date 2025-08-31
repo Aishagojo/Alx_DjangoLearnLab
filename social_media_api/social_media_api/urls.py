@@ -3,11 +3,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # Accounts app endpoints: register, login, profile, follow/unfollow
-    path('api/accounts/', include('accounts.urls')),
-    
-    # Posts app endpoints: posts CRUD and feed
-    path('api/posts/', include('posts.urls')),
+
+    # Accounts app endpoints: follow/unfollow
+    path('', include('accounts.urls')),  # URLs like /follow/<int:user_id>/ and /unfollow/<int:user_id>/
+
+    # Posts app endpoints: feed
+    path('', include('posts.urls')),     # URL like /feed/
 ]
 
