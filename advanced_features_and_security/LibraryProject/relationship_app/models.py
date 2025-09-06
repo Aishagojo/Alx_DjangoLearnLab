@@ -4,9 +4,6 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# ----------------------------
-# Custom User Manager
-# ----------------------------
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -21,18 +18,9 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
         return self.create_user(username, email, password, **extra_fields)
 
 
-# ----------------------------
-# Custom User Model
-# ----------------------------
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
@@ -43,9 +31,6 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-# ----------------------------
-# UserProfile (optional, if you want roles)
-# ----------------------------
 class UserProfile(models.Model):
     ROLE_CHOICES = [
         ("Admin", "Admin"),
@@ -59,9 +44,6 @@ class UserProfile(models.Model):
         return f"{self.user.username} - {self.role}"
 
 
-# ----------------------------
-# Signal to auto-create UserProfile
-# ----------------------------
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
