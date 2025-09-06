@@ -32,9 +32,10 @@ def run_queries():
 
     # 3. Retrieve the librarian for a library
     try:
-        librarian = Librarian.objects.get(library__name=library_name)
+        library = Library.objects.get(name=library_name)
+        librarian = Librarian.objects.get(library=library)  # <- EXACT PATTERN
         print(f"\nLibrarian for {library_name}: {librarian.name}")
-    except Librarian.DoesNotExist:
+    except (Library.DoesNotExist, Librarian.DoesNotExist):
         print(f"No librarian found for {library_name}")
 
 
