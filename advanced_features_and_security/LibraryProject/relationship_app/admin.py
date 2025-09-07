@@ -1,16 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, UserProfile
+from .models import UserProfile
 
-class CustomUserAdmin(UserAdmin):
-    model = CustomUser
-    fieldsets = UserAdmin.fieldsets + (
-        ("Extra Fields", {"fields": ("date_of_birth", "profile_photo")}),
-    )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Extra Fields", {"fields": ("date_of_birth", "profile_photo")}),
-    )
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "extra_info")   # ✅ removed role
+    list_filter = ("user",)                       # ✅ removed role
 
-admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, UserProfileAdmin)
 
