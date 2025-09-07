@@ -1,22 +1,23 @@
-# Run in Django shell: python3 manage.py shell
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
-from bookshelf.models import Book
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import permission_required
+from .models import Book
 
-# Create groups
-groups = ["Admins", "Editors", "Viewers"]
-for name in groups:
-    Group.objects.get_or_create(name=name)
+@permission_required("bookshelf.can_view", raise_exception=True)
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, "bookshelf/book_list.html", {"books": books})
 
-# Get permissions
-book_ct = ContentType.objects.get_for_model(Book)
-can_view = Permission.objects.get(codename="can_view", content_type=book_ct)
-can_create = Permission.objects.get(codename="can_create", content_type=book_ct)
-can_edit = Permission.objects.get(codename="can_edit", content_type=book_ct)
-can_delete = Permission.objects.get(codename="can_delete", content_type=book_ct)
+@permission_required("bookshelf.can_create", raise_exception=True)
+def book_create(request):
+    return render(request, "bookshelf/book_form.html")
 
-# Assign permissions to groups
-Group.objects.get(name="Admins").permissions.set([can_view, can_create, can_edit, can_delete])
-Group.objects.get(name="Editors").permissions.set([can_create, can_edit])
-Group.objects.get(name="Viewers").permissions.set([can_view])
+@permission_required("bookshelf.can_edit", raise_exception=True)
+def book_edit(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    return render(request, "bookshelf/book_form.html", {"book": book})
+
+@permission_required("bookshelf.can_delete", raise_exception=True)
+def book_delete(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    return render(request, "bookshelf/book_confirm_delete.html", {"book": book})
 
