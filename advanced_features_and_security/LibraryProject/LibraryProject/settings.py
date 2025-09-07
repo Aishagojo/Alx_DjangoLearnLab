@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# -----------------------------
+# BASE DIRECTORY
+# -----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # -----------------------------
@@ -15,7 +17,9 @@ DEBUG = False  # Set to False in production
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
-# Application definition
+# -----------------------------
+# APPLICATION DEFINITION
+# -----------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,8 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',          # ✅ Custom user app
-    'relationship_app',   # ✅ Additional app
+    'bookshelf',          # ✅  Custom user app
+    'relationship_app',   # ✅  Additional app
+    'csp',                # ✅  Content Security Policy
 ]
 
 MIDDLEWARE = [
@@ -35,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # ✅ CSP middleware
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -57,7 +63,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
-# Database
+# -----------------------------
+# DATABASE
+# -----------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -65,10 +73,11 @@ DATABASES = {
     }
 }
 
-# Custom user model
+# -----------------------------
+# AUTHENTICATION
+# -----------------------------
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -76,24 +85,40 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# -----------------------------
+# INTERNATIONALIZATION
+# -----------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
 
-# Static files
+# -----------------------------
+# STATIC FILES
+# -----------------------------
 STATIC_URL = '/static/'
 
 # -----------------------------
-# ADDITIONAL SECURITY SETTINGS
+# SECURITY ENHANCEMENTS
 # -----------------------------
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# -----------------------------
+# CONTENT SECURITY POLICY (CSP)
+# -----------------------------
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'",)
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_MEDIA_SRC = ("'self'",)
+CSP_FRAME_SRC = ("'none'",)
 
