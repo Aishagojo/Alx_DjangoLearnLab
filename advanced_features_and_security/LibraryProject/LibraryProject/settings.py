@@ -1,21 +1,21 @@
+# settings.py
+
 import os
 from pathlib import Path
 
 # -----------------------------
-# BASE DIRECTORY
+# BASE CONFIGURATION
 # -----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# -----------------------------
-# SECURITY SETTINGS
-# -----------------------------
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'your-secret-key-here'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # Set to False in production
+# Debug should be False in production
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+# Only allow hosts you trust
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'yourdomain.com']
 
 # -----------------------------
 # APPLICATION DEFINITION
@@ -27,20 +27,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',          # ✅  Custom user app
-    'relationship_app',   # ✅  Additional app
-    'csp',                # ✅  Content Security Policy
+    'bookshelf',
+    'relationship_app',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware',  # Handles SSL redirects and security headers
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',     # Protects against CSRF attacks
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'csp.middleware.CSPMiddleware',  # ✅ CSP middleware
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Prevents clickjacking
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -64,7 +62,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
 # -----------------------------
-# DATABASE
+# DATABASE CONFIGURATION
 # -----------------------------
 DATABASES = {
     'default': {
@@ -74,10 +72,8 @@ DATABASES = {
 }
 
 # -----------------------------
-# AUTHENTICATION
+# PASSWORD VALIDATION
 # -----------------------------
-AUTH_USER_MODEL = 'bookshelf.CustomUser'
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -91,7 +87,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 # -----------------------------
@@ -100,25 +95,39 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # -----------------------------
-# SECURITY ENHANCEMENTS
+# CUSTOM USER MODEL
 # -----------------------------
-SECURE_BROWSER_XSS_FILTER = True
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# -----------------------------
+# SECURITY SETTINGS FOR HTTPS
+# -----------------------------
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True  # ✅ Enforces HTTPS
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include all subdomains
+SECURE_HSTS_PRELOAD = True  # Allows browsers to preload HSTS
+
+# Cookies sent only over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Protect against clickjacking
 X_FRAME_OPTIONS = 'DENY'
+
+# Prevent MIME type sniffing
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+# Enable browser XSS filter
+SECURE_BROWSER_XSS_FILTER = True
 
 # -----------------------------
-# CONTENT SECURITY POLICY (CSP)
+# ADDITIONAL NOTES
 # -----------------------------
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'",)
-CSP_FONT_SRC = ("'self'",)
-CSP_CONNECT_SRC = ("'self'",)
-CSP_MEDIA_SRC = ("'self'",)
-CSP_FRAME_SRC = ("'none'",)
+# 1. Ensure your deployment server (e.g., Nginx, Apache) is configured with SSL/TLS certificates.
+# 2. Test HTTPS redirect by visiting http://yourdomain.com, it should redirect to https://yourdomain.com
+# 3. Review all security headers using browser dev tools or online tools like securityheaders.com
 
