@@ -1,9 +1,7 @@
 from django.contrib import admin
-from .models import UserProfile
+from .models import RelationshipProfile  # ✅ Match models.py
 
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "extra_info")   # ✅ removed role
-    list_filter = ("user",)                       # ✅ removed role
-
-admin.site.register(UserProfile, UserProfileAdmin)
+@admin.register(RelationshipProfile)
+class RelationshipProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "bio", "website")
 
