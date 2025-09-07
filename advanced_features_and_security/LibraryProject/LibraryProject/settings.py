@@ -4,13 +4,16 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# -----------------------------
+# SECURITY SETTINGS
+# -----------------------------
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'your-secret-key-here'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # Set to False in production
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 # Application definition
 INSTALLED_APPS = [
@@ -20,8 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',          # ✅ Custom user lives here
-    'relationship_app',   # ✅ Still available
+    'bookshelf',          # ✅ Custom user app
+    'relationship_app',   # ✅ Additional app
 ]
 
 MIDDLEWARE = [
@@ -62,7 +65,7 @@ DATABASES = {
     }
 }
 
-# ✅ Use CustomUser from bookshelf
+# Custom user model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Password validation
@@ -81,4 +84,16 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
+
+# -----------------------------
+# ADDITIONAL SECURITY SETTINGS
+# -----------------------------
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
